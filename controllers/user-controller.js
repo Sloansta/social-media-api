@@ -65,6 +65,48 @@ const userController = {
             });
     },
 
+    // PUT add a friend to the users friends list
+    addFriend({ params, body }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $push: { friends: body }},
+            { new: true, runValidators: true }
+        )
+        .then(dbUserData => {
+            if(!dbUserData) {
+                res.status(404).json({ message: usrNotFound });
+                return;
+            }
+
+            res.json(dbUserData);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        });
+    },
+
+    // DELETE a friend from user
+    deleteFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $pull: { friends: params.friendId } },
+            { new: true, runValidators: true }
+        )
+        .then(dbUserData => {
+            if(!dbUserData) {
+                res.status(404).json({ message: usrNotFound });
+                return;
+            }
+
+            res.json(dbUserData);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        });
+    },
+
     // DELETE a user
     deleteUser({ params }, res) {
         User.findOneAndDelete({ _id: params.id })
@@ -79,7 +121,7 @@ const userController = {
             .catch(err => {
                 console.log(err);
                 res.status(400).json(err);
-            })
+            });
     }
 
 };
