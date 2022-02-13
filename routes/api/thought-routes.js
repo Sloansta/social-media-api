@@ -20,7 +20,6 @@ router
 router
     .route('/:id')
     .get(getThoughtById)
-    .post(addReaction)
     .put(updateThought)
     .delete(deleteThought);
 
@@ -28,7 +27,11 @@ router
 // Single routes for thought by id and userId
 router
     .route('/:userId')
-    .post(createThought);
+    .post(createThought)
+
+router
+    .route('/:id/reactions')
+    .post(addReaction);
 
 // Single routes for reactions
 router
