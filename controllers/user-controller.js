@@ -6,10 +6,6 @@ const userController = {
     // GET all users
     getAllUsers(req, res) {
         User.find({})
-            .popluate({
-                path: 'thoughts',
-                select: '-__v'
-            })
             .select('-__v')
             .sort({ _id: -1 })
             .then(dbUserData => res.json(dbUserData))
@@ -22,10 +18,6 @@ const userController = {
     // GET one user by id
     getUserById({ params }, res) {
         User.findOne({ _id: params.id })
-            .popluate({
-                path: 'thoughts',
-                select: '-__v'
-            })
             .select('-__v')
             .then(dbUserData => {
                 if(!dbUserData) {
@@ -68,7 +60,7 @@ const userController = {
     // PUT add a friend to the users friends list
     addFriend({ params, body }, res) {
         User.findOneAndUpdate(
-            { _id: params.userId },
+            { _id: params.friendId },
             { $push: { friends: body }},
             { new: true, runValidators: true }
         )
@@ -89,7 +81,7 @@ const userController = {
     // DELETE a friend from user
     deleteFriend({ params }, res) {
         User.findOneAndUpdate(
-            { _id: params.userId },
+            { _id: params.id },
             { $pull: { friends: params.friendId } },
             { new: true, runValidators: true }
         )
